@@ -3,20 +3,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "document_list.h"
+#include "query.h"
 
-void createaleak() {
-  char *foo = malloc(20 * sizeof(char));
-  printf("Allocated leaking string: %s", foo);
-}
+extern void searchDocuments(DocumentList* docs, Query* q);
+
+
 
 int main() {
-  printf("*****************\nWelcome to EDA 2!\n*****************\n");
+  DocumentList docs;
+  documentListInit(&docs);
+  documentListLoadFromDir(&docs, "datasets/wikipedia12");
 
-  // how to import and call a function
-  printf("Factorial of 4 is %d\n", fact(4));
+  char input[256];
 
-  // uncomment and run "make v" to see how valgrind detects memory leaks
-  // createaleak();
+  while (1) {
+    printf("\nSearch (leave empty to exit): ");
+    fgets(input, sizeof(input), stdin);
+    input[strcspn(input, "\n")] = 0;
+    if (strlen(input) == 0) break;
 
+    Query* q = queryInit(input);
+    searchDocuments(&docs, q);
+    queryFree(q);
+  }
+
+  documentListFree(&docs);
   return 0;
 }
+
