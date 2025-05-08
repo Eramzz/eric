@@ -18,8 +18,13 @@ Query* queryInit(const char* input) {
     QueryItem** current = &q->head;
 
     while (token) {
-        *current = queryItemCreate(token);
-        current = &((*current)->next);
+        size_t len = strlen(token);
+
+        if (len > 2) {  //No acepta palabras <2
+            *current = queryItemCreate(token);
+            current = &((*current)->next);
+        }
+
         token = strtok(NULL, " ");
     }
     free(inputCopy);
