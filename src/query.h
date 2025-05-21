@@ -18,4 +18,5 @@ QueryItem* queryItemCreate(const char* word);
 Query* queryInit(const char* input);
 void queryFree(Query* query);
 
+
 #endif //QUERY_H

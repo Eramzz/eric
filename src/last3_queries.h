@@ -5,29 +5,20 @@
 #ifndef LAST3_QUERIES_H
 #define LAST3_QUERIES_H
 
-#include"query.h"
+#define MAX_QUERIES 3 //num max request que se pueden guardar en la cola
 
-typedef struct QueryNode{
-    Query*query;
-    struct QueryNode*next;
-}QueryNode;
+//estructura cola circular para guardar requests
+typedef struct {
+    char* queries[MAX_QUERIES]; //array de medida 3 (queremos solo las 3 ultimas requests)
+    int head; //indice 1r elemento, más antiguo
+    int tail; //indice ultimo elemento, más reciente
+    int contador; //num elementos en la cola (se va actualizando)
+} QueryQueue;
 
-typedef struct{
-    QueryNode*head;
-    QueryNode*tail;
-    int size;
-}QueryQueue;
-
-void InitQueue_query
-void PushQueue_query
-void
+void initQueue(QueryQueue* q);  //Inicializa cola
+void enqueueQuery(QueryQueue* q, const char* query_str);  //Añade la nueva request a la cola
+void showLastQueries(const QueryQueue* q);  //Enseña las últimas 3 colas
+void freeQueue(QueryQueue* q); //Libera memoria cola
 
 
 #endif //LAST3_QUERIES_H
-
-    void queryQueueInit(QueryQueue* q);
-    void queryQueuePush(QueryQueue* q, Query* query);
-    void queryQueuePrint(QueryQueue* q);
-    void queryQueueFree(QueryQueue* q);
-
-#endif
