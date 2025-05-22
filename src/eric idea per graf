@@ -73,10 +73,21 @@ void documentGraphAddNode(DocumentGraph* graph, int document_id) {
     // Add to graph
     if (graph->size >= graph->capacity) {
         // Resize graph (simplified, in real code would need proper realloc)
+
+        //AÑADIDO SOFIA
+        int new_capacity = graph->capacity * 2; //multiplica por 2 capacidad grafo
+        //intenta reasignar memoria para el array de punteros realloc(array actual, nuevo tamaño)
+        GraphNode** new_nodes = realloc(graph->nodes, new_capacity * sizeof(GraphNode*));
+
+        //comprueba, si devuelve NULL, no hay memoria suf o error y entonces sale de la función sin modificar
+        if (!new_nodes) return;
+        //si ha podido hacer el realloc, actualiza los punteros y la capacidad (ahora apuntan a los nuevos valores)
+        graph->nodes = new_nodes;
+        graph->capacity = new_capacity;
         return;
     }
     
-    graph->nodes[graph->size++] = node;
+    graph->nodes[graph->size++] = node; //añade nuevo nodo a la nueva posición asignada
 }
 
 void documentGraphAddEdge(DocumentGraph* graph, int from_id, int to_id) {
@@ -107,9 +118,20 @@ void documentGraphAddEdge(DocumentGraph* graph, int from_id, int to_id) {
     // Add edge
     if (from_node->neighbors_count >= from_node->capacity) {
         // Resize neighbors array (simplified)
+
+        //AÑADIDO SOFIA
+        int new_capacity = from_node->capacity * 2; //calcula nueva capacidad, el doble de la anterior
+        //intenta reasignar memoria para el array de punteros a los vecinos realloc(array actual, nuevo tamaño)
+        GraphNode** new_neighbors = realloc(from_node->neighbors, new_capacity * sizeof(GraphNode*));
+        //comprueba, si devuelve NULL, no hay memoria suf o error y entonces sale de la función sin modificar
+        if (!new_neighbors) return;
+        //si ha podido hacer el realloc, actualiza los punteros a los vecinos y la nueva capacidad (ahora apuntan a los nuevos valores)
+        from_node->neighbors = new_neighbors;
+        from_node->capacity = new_capacity;
         return;
     }
-    
+
+    //añade arista entre 2 nodos y actualiza el contador de vecinos (from node to node)
     from_node->neighbors[from_node->neighbors_count++] = to_node;
 }
 
