@@ -2,8 +2,6 @@
 #ifndef REVERSE_INDEX_H
 #define REVERSE_INDEX_H
 
-#include "document.h"
-
 typedef struct ReverseIndexEntry {
     char* word;
     DocumentsList* documents;

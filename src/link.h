@@ -6,8 +6,15 @@ typedef struct Link {
     struct Link* next;
 } Link;
 
-Link* linkCreate(int id);
-void linkAppend(Link** head, int id);
-void linkFree(Link* head);
+typedef struct links {
+    int size;
+    Link* head;
+    Link* tail;
+} Links;
 
+Link* linkInit();
+void linksFree(Links* list);
+void linkAppend(Links* list, int id);
+bool LinksContains(Links* list, int id);
+int LinksGet(Links* list, int index);
 #endif
