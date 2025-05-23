@@ -1,7 +1,6 @@
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
-#include "links.h"
 
 typedef struct Document {
     int id;
@@ -13,12 +12,7 @@ typedef struct Document {
 } Document;
 
 
-
-
-Document* documentDeserialize(const char* path);
 void documentFree(Document* doc);
-void documentPrintFull(Document* doc);
-char** tokenizeDocument(Document* doc, int* count);
 #endif
 
 
