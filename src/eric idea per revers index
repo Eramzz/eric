@@ -31,6 +31,7 @@ ReverseIndex* reverseIndexDeserialize(char* filename);
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 
 #define HASH_MULTIPLIER 31
 
@@ -43,6 +44,7 @@ unsigned long hash(const char* str, int capacity) {
     return hash % capacity;
 }
 
+//crea reverseindex vacío
 ReverseIndex* reverseIndexCreate(int capacity) {
     ReverseIndex* index = (ReverseIndex*)malloc(sizeof(ReverseIndex));
     if (!index) return NULL;
@@ -58,8 +60,9 @@ ReverseIndex* reverseIndexCreate(int capacity) {
     return index;
 }
 
+//función añade palabra y documento al índice
 void reverseIndexAdd(ReverseIndex* index, char* word, Document* doc) {
-    if (!index || !word || !doc) return;
+    if (!index || !word || !doc) return; //comprueba que los indices y la lista no sean nulos
     
     // Normalize word (lowercase)
     for (char* p = word; *p; p++) {
