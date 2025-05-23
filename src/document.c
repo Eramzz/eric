@@ -1,35 +1,3 @@
-#ifndef DOCUMENT_H
-#define DOCUMENT_H
-
-typedef struct Link {
-    int destination_id;
-    char* text;
-    struct Link* next;
-} Link;
-
-typedef struct Document {
-    int id;
-    char* title;
-    char* body;
-    Link* links;
-    float relevance_score;
-    struct Document* next;
-} Document;
-
-typedef struct DocumentsList {
-    Document* head;
-    int size;
-} DocumentsList;
-
-Document* documentDeserialize(char* path);
-void documentFree(Document* doc);
-void documentsListAppend(DocumentsList* list, Document* doc);
-Document* documentsListGet(DocumentsList* list, int index);
-void documentsListFree(DocumentsList* list);
-
-#endif
-
-
 
 #include "document.h"
 #include <stdio.h>
@@ -130,10 +98,10 @@ Document* documentDeserialize(char* path) {
 
 void documentFree(Document* doc) {
     if (!doc) return;
-    
+
     free(doc->title);
     free(doc->body);
-    
+
     Link* current = doc->links;
     while (current) {
         Link* next = current->next;
@@ -141,13 +109,13 @@ void documentFree(Document* doc) {
         free(current);
         current = next;
     }
-    
+
     free(doc);
 }
 
 void documentsListAppend(DocumentsList* list, Document* doc) {
     if (!list || !doc) return;
-    
+
     if (!list->head) {
         list->head = doc;
     } else {
@@ -163,7 +131,7 @@ void documentsListAppend(DocumentsList* list, Document* doc) {
 
 Document* documentsListGet(DocumentsList* list, int index) {
     if (!list || index < 0 || index >= list->size) return NULL;
-    
+
     Document* current = list->head;
     for (int i = 0; i < index && current; i++) {
         current = current->next;
@@ -173,7 +141,7 @@ Document* documentsListGet(DocumentsList* list, int index) {
 
 void documentsListFree(DocumentsList* list) {
     if (!list) return;
-    
+
     Document* current = list->head;
     while (current) {
         Document* next = current->next;
@@ -182,4 +150,44 @@ void documentsListFree(DocumentsList* list) {
     }
     list->head = NULL;
     list->size = 0;
+}
+//LAB 4
+void sortDocumentsByRelevance(DocumentsList* list) {
+    if (!list || !list->head) return;
+
+    int swapped;
+    Document* ptr1;
+    Document* lptr = NULL;
+
+    do {
+        swapped = 0;
+        ptr1 = list->head;
+
+        while (ptr1->next != lptr) {
+            if (ptr1->relevance_score < ptr1->next->relevance_score) {
+                // Intercambia los contenidos de los documentos (no los punteros)
+                int temp_id = ptr1->id;
+                char* temp_title = ptr1->title;
+                char* temp_body = ptr1->body;
+                float temp_score = ptr1->relevance_score;
+                Link* temp_links = ptr1->links;
+
+                ptr1->id = ptr1->next->id;
+                ptr1->title = ptr1->next->title;
+                ptr1->body = ptr1->next->body;
+                ptr1->relevance_score = ptr1->next->relevance_score;
+                ptr1->links = ptr1->next->links;
+
+                ptr1->next->id = temp_id;
+                ptr1->next->title = temp_title;
+                ptr1->next->body = temp_body;
+                ptr1->next->relevance_score = temp_score;
+                ptr1->next->links = temp_links;
+
+                swapped = 1;
+            }
+            ptr1 = ptr1->next;
+        }
+        lptr = ptr1;  // Optimización: ya no hace falta revisar hasta el final
+    } while (swapped);
 }
