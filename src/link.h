@@ -1,6 +1,10 @@
 #ifndef LINK_H
 #define LINK_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
 typedef struct Link {
     int id;
     struct Link* next;

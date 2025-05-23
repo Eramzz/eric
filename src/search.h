@@ -5,6 +5,8 @@
 #ifndef SEARCH_H
 #define SEARCH_H
 
+DocumentsList* searchDocumentsWithQuery(ReverseIndex* index, Query* query);
+
 int containsAllWords(Document* doc, Query* q);
 void searchDocuments(DocumentList* docs, Query* q);
 

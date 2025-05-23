@@ -1,4 +1,3 @@
-
 #include "graph.h"
 #include <stdlib.h>
 #include <string.h>
@@ -202,3 +201,4 @@ void calculatePageRank(DocumentGraph* graph, float damping_factor, int max_itera
     free(new_ranks);
     free(ranks);
 }
+
