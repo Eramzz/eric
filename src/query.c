@@ -27,7 +27,7 @@ void NormalizeWord(char* word) {
 }
 
 //Función que inicializa la estructura Query cuando recibe texto
-Query* queryInit(const char* input) {
+Query* QueryInit(const char* input) {
     Query* q = (Query*)malloc(sizeof(Query)); //reserva memoria para la estructura Query q (lista enlazada)
     q->head = NULL; //establecemos el head a NULL pq inicialmente la lista esta vacía
     char* inputCopy = strdup(input); //hace copia del input recibido para no perder el valor después

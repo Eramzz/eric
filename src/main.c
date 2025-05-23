@@ -1,4 +1,3 @@
-#include "sample_lib.h"
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,8 +14,8 @@ extern void searchDocuments(DocumentList* docs, Query* q);
 
 int main() {
   DocumentList docs;
-  documentListInit(&docs);
-  documentListLoadFromDir(&docs, "datasets/wikipedia12");
+  DocumentListInit(&docs);
+  DocumentListLoadFromDir(&docs, "datasets/wikipedia12");
 
   char input[256];
 
@@ -26,12 +25,12 @@ int main() {
     input[strcspn(input, "\n")] = 0;
     if (strlen(input) == 0) break;
 
-    Query* q = queryInit(input);
+    Query* q = QueryInit(input);
     searchDocuments(&docs, q);
     queryFree(q);
   }
 
-  documentListFree(&docs);
+  DocumentListFree(&docs);
   return 0;
 }
 

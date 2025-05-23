@@ -1,31 +1,3 @@
-#ifndef GRAPH_H
-#define GRAPH_H
-
-#include "document.h"
-
-typedef struct GraphNode {
-    int document_id;
-    struct GraphNode** neighbors;
-    int neighbors_count;
-    int capacity;
-    float pagerank;  //AÑADIDO SOFIA PARA LA FUNCIÓN DEL FINAL
-} GraphNode;
-
-typedef struct DocumentGraph {
-    GraphNode** nodes;
-    int size;
-    int capacity;
-} DocumentGraph;
-
-DocumentGraph* documentGraphCreate(int capacity);
-void documentGraphAddNode(DocumentGraph* graph, int document_id);
-void documentGraphAddEdge(DocumentGraph* graph, int from_id, int to_id);
-float graphGetIndegree(DocumentGraph* graph, int document_id);
-void documentGraphFree(DocumentGraph* graph);
-void calculatePageRank(DocumentGraph* graph, float damping_factor, int max_iterations, float tolerance);
-
-#endif
-
 #include "graph.h"
 #include <stdlib.h>
 #include <string.h>
@@ -36,13 +8,13 @@ void calculatePageRank(DocumentGraph* graph, float damping_factor, int max_itera
 DocumentGraph* documentGraphCreate(int capacity) {
     DocumentGraph* graph = (DocumentGraph*)malloc(sizeof(DocumentGraph));
     if (!graph) return NULL;
-    
+
     graph->nodes = (GraphNode**)calloc(capacity, sizeof(GraphNode*));
     if (!graph->nodes) {
         free(graph);
         return NULL;
     }
-    
+
     graph->size = 0;
     graph->capacity = capacity;
     return graph;
@@ -50,28 +22,28 @@ DocumentGraph* documentGraphCreate(int capacity) {
 
 void documentGraphAddNode(DocumentGraph* graph, int document_id) {
     if (!graph || document_id < 0) return;
-    
+
     // Check if node already exists
     for (int i = 0; i < graph->size; i++) {
         if (graph->nodes[i]->document_id == document_id) {
             return;
         }
     }
-    
+
     // Create new node
     GraphNode* node = (GraphNode*)malloc(sizeof(GraphNode));
     if (!node) return;
-    
+
     node->document_id = document_id;
     node->neighbors = (GraphNode**)malloc(INITIAL_NEIGHBORS_CAPACITY * sizeof(GraphNode*));
     if (!node->neighbors) {
         free(node);
         return;
     }
-    
+
     node->neighbors_count = 0;
     node->capacity = INITIAL_NEIGHBORS_CAPACITY;
-    
+
     // Add to graph
     if (graph->size >= graph->capacity) {
         // Resize graph (simplified, in real code would need proper realloc)
@@ -88,16 +60,16 @@ void documentGraphAddNode(DocumentGraph* graph, int document_id) {
         graph->capacity = new_capacity;
         return;
     }
-    
+
     graph->nodes[graph->size++] = node; //añade nuevo nodo a la nueva posición asignada
 }
 
 void documentGraphAddEdge(DocumentGraph* graph, int from_id, int to_id) {
     if (!graph) return;
-    
+
     GraphNode* from_node = NULL;
     GraphNode* to_node = NULL;
-    
+
     // Find nodes
     for (int i = 0; i < graph->size; i++) {
         if (graph->nodes[i]->document_id == from_id) {
@@ -107,16 +79,16 @@ void documentGraphAddEdge(DocumentGraph* graph, int from_id, int to_id) {
             to_node = graph->nodes[i];
         }
     }
-    
+
     if (!from_node || !to_node) return;
-    
+
     // Check if edge already exists
     for (int i = 0; i < from_node->neighbors_count; i++) {
         if (from_node->neighbors[i]->document_id == to_id) {
             return;
         }
     }
-    
+
     // Add edge
     if (from_node->neighbors_count >= from_node->capacity) {
         // Resize neighbors array (simplified)
@@ -139,7 +111,7 @@ void documentGraphAddEdge(DocumentGraph* graph, int from_id, int to_id) {
 
 float graphGetIndegree(DocumentGraph* graph, int document_id) {
     if (!graph) return 0.0f;
-    
+
     float count = 0.0f;
     for (int i = 0; i < graph->size; i++) {
         GraphNode* node = graph->nodes[i];
@@ -154,13 +126,13 @@ float graphGetIndegree(DocumentGraph* graph, int document_id) {
 
 void documentGraphFree(DocumentGraph* graph) {
     if (!graph) return;
-    
+
     for (int i = 0; i < graph->size; i++) {
         GraphNode* node = graph->nodes[i];
         free(node->neighbors);
         free(node);
     }
-    
+
     free(graph->nodes);
     free(graph);
 }
